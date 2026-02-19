@@ -1,0 +1,12 @@
+{
+  "Random Forest": {
+    "cv_auc_mean": 0.82
+  },
+  "Gradient Boosting": {
+    "cv_auc_mean": 0.8453,
+    "test_roc_auc": 0.8419
+  },
+  "Logistic Regression": {
+    "cv_auc_mean": 0.8429
+  }
+}
