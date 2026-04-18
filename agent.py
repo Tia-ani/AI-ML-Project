@@ -1,4 +1,5 @@
 import json
+import os
 from pathlib import Path
 import pandas as pd
 import joblib
@@ -35,9 +36,22 @@ class RetentionReport(BaseModel):
         description="A required legal/business disclaimer."
     )
 
-# 4. LLM Initialization 
-# Retained your update to 'gemini-2.5-flash'
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.2)
+# 4. LLM Initialization (lazy to avoid import-time crash if key is missing)
+_llm_client = None
+
+
+def get_llm_client():
+    """Creates Gemini client on first use. Returns None when API key is unavailable."""
+    global _llm_client
+    if _llm_client is not None:
+        return _llm_client
+
+    api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+    if not api_key:
+        return None
+
+    _llm_client = ChatGoogleGenerativeAI(model="gemini-2.5-flash", temperature=0.2)
+    return _llm_client
 
 # 5. Graph Nodes
 def analyze_factors(state: AgentState):
@@ -88,7 +102,24 @@ def retrieve_context(state: AgentState):
 
 def generate_strategy(state: AgentState):
     """Puts together risk factors and Chroma context into the Gemini structured prompt."""
-    structured_llm = llm.with_structured_output(RetentionReport)
+    llm_client = get_llm_client()
+
+    if llm_client is None:
+        factors = state.get("key_factors", [])
+        return {
+            "final_report": {
+                "risk_summary": "High churn risk detected by the ML model, but AI narrative generation is unavailable because no Gemini API key is configured.",
+                "contributing_factors": factors,
+                "recommended_actions": [
+                    "Set GOOGLE_API_KEY (or GEMINI_API_KEY) in your environment or .env file.",
+                    "Use high-risk threshold filtering to prioritize outreach until AI recommendations are enabled.",
+                    "Review top churn drivers in the dashboard for immediate manual action."
+                ],
+                "disclaimer": "AI-generated recommendation is currently disabled due to missing API credentials."
+            }
+        }
+
+    structured_llm = llm_client.with_structured_output(RetentionReport)
     
     customer_data = state.get("customer_data", {})
     key_factors = state.get("key_factors", [])
