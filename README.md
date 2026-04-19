@@ -1,31 +1,31 @@
 # 📉 Customer Churn Prediction and Agentic Retention Strategy System
 
-## 👥 Team Members
+## Team Members
 - Harshit Jain  
 - Vansh Dagar  
 - Anishka Khurana  
 
 ---
 
-## 🚀 Project Overview
+## Project Overview
 
 Customer churn is a critical problem in the telecom industry, directly impacting revenue and customer lifetime value. While traditional machine learning models can identify customers at risk of leaving, they fail to provide **actionable insights** to retain them.
 
 This project builds an **end-to-end intelligent system** that not only predicts churn risk but also generates **data-driven retention strategies** using Agentic AI.
 
 The system integrates:
-- 📊 Machine Learning (Churn Prediction)
-- 🤖 LangGraph-based Agentic Workflow
-- 🔍 Retrieval-Augmented Generation (RAG)
-- 📈 Interactive Streamlit Dashboard
+- Machine Learning (Churn Prediction)
+- LangGraph-based Agentic Workflow
+- Retrieval-Augmented Generation (RAG)
+- Interactive Streamlit Dashboard
 
-👉 The system transforms **prediction → decision → action**
+The system transforms **prediction → decision → action**
 
 ---
 
-## 🧠 Key Features
+## Key Features
 
-### 🔹 1. Churn Prediction (Machine Learning)
+### 1. Churn Prediction (Machine Learning)
 - Models evaluated:
   - Random Forest  
   - Gradient Boosting  
@@ -38,7 +38,7 @@ The system integrates:
 
 ---
 
-### 🔹 2. Agentic AI Retention System
+### 2. Agentic AI Retention System
 - Built using **LangGraph**
 - Multi-step reasoning pipeline:
   - Factor Analysis (feature importance)
@@ -47,7 +47,7 @@ The system integrates:
 
 ---
 
-### 🔹 3. Retrieval-Augmented Generation (RAG)
+### 3. Retrieval-Augmented Generation (RAG)
 - Embedding Model: `all-MiniLM-L6-v2`
 - Vector Database: **ChromaDB**
 - Chunking:
@@ -57,7 +57,7 @@ The system integrates:
 
 ---
 
-### 🔹 4. Structured AI Output
+### 4. Structured AI Output
 Each generated report contains:
 - Risk Summary  
 - Contributing Factors  
@@ -66,7 +66,7 @@ Each generated report contains:
 
 ---
 
-### 🔹 5. Streamlit Dashboard
+### 5. Streamlit Dashboard
 - Individual customer prediction
 - Batch dashboard (Extension feature)
 - Risk gauge visualization
@@ -75,7 +75,7 @@ Each generated report contains:
 
 ---
 
-## 🏗️ System Architecture
+##  System Architecture
 ```bash
 User Input
 ↓
@@ -97,14 +97,14 @@ Streamlit Dashboard
 ```
 ---
 
-## 📁 Repository Structure
+##  Repository Structure
 ```bash
 AI-ML-Project/
 ├── app.py # Main Streamlit app
 ├── requirements.txt
 ├── README.md
 ├── .gitignore
-|
+│
 ├── agents/
 │ ├── retention_agent.py # LangGraph workflow
 │ └── rag_setup.py # RAG pipeline
@@ -112,7 +112,7 @@ AI-ML-Project/
 ├── models/
 │ ├── train_model.py # ML training pipeline
 │ └── inference.py # Model inference logic
-|
+│
 ├── data/
 │ ├── WA_Fn-UseC_-Telco-Customer-Churn.csv
 │ └── retention_best_practices.md
@@ -145,7 +145,7 @@ cd AI-ML-Project
 
 python -m venv venv
 ```
-### 3. Activate environment
+### 3\. Activate environment
 ```bash
 Mac/Linux:
 
@@ -156,13 +156,13 @@ Windows:
 venv\Scripts\activate
 ```
 
-### 4. Install dependencies
+### 4\. Install dependencies
 ```bash
 pip install -r requirements.txt
 
 Create a .env file:
 ```
-### 5. Run the application
+### 5\. Run the application
 ```bash 
 streamlit run app.py
 ```
