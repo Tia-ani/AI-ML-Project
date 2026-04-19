@@ -1,175 +1,180 @@
-% IEEE Double-Column Report (Project 5: Telco Churn Prediction)
-% Compile: pdflatex → bibtex → pdflatex → pdflatex
-
 \documentclass[conference]{IEEEtran}
 
-\IEEEoverridecommandlockouts
-
-\usepackage[numbers]{natbib}
-\usepackage{amsmath,amssymb,amsfonts}
-\usepackage{algorithm}
-\usepackage{algorithmic}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage{graphicx}
-\usepackage{textcomp}
-\usepackage{xcolor}
-\usepackage{url}
+\usepackage{amsmath}
 \usepackage{booktabs}
-\usepackage{multirow}
-\usepackage{listings}
+\usepackage{hyperref}
+\usepackage{enumitem}
 
-% Code listing style
-\lstset{
-  basicstyle=\ttfamily\small,
-  breaklines=true,
-  frame=single,
-  captionpos=b
+\title{Customer Churn Prediction and Agentic Retention Strategy System}
+
+\author{
+\IEEEauthorblockN{Harshit Jain, Vansh Dagar, Anishka Khurana}
+\IEEEauthorblockA{Introduction to AI/ML \\ 4th Semester}
 }
 
 \begin{document}
 
-% ---------- TITLE ----------
-\title{Customer Churn Prediction on the Telco Dataset using Classical Machine Learning Models}
-
-\author{
-\IEEEauthorblockN{Harshit Jain, Anishka Khurana, Vansh Dagar}
-\IEEEauthorblockA{
-AI/ML Project (Mid-Sem Evaluation)\\
-Semester 4
-}
-}
-
 \maketitle
 
-% ---------- ABSTRACT ----------
 \begin{abstract}
-Customer churn is a major business challenge in subscription-based telecom services. This project builds a churn prediction pipeline using the Telco Customer Churn dataset, focusing on data cleaning, categorical encoding, model training, evaluation, and deployment through a Streamlit interface. We compare Logistic Regression and Random Forest classifiers on the cleaned dataset, report classification metrics, and provide reproducible artefacts including trained models, encoders, and feature importance outputs. The final outcome is an end-to-end system where users can upload a CSV file and obtain churn predictions along with basic analytics and downloadable results.
+Customer churn prediction is a critical problem in customer relationship management, especially in the telecom industry. Traditional machine learning models can identify high-risk customers but fail to provide actionable insights for retention. This project presents an intelligent customer churn prediction system enhanced with an agentic AI layer that generates structured retention strategies. The system integrates supervised learning, retrieval-augmented generation (RAG), and LangGraph-based agent workflows. Experimental results demonstrate strong predictive performance with a Gradient Boosting model achieving a test ROC-AUC of 0.8419. The agentic system further transforms predictions into actionable recommendations, enabling a shift from predictive analytics to decision support.
 \end{abstract}
 
-\begin{IEEEkeywords}
-customer churn, classification, logistic regression, random forest, preprocessing, streamlit deployment
-\end{IEEEkeywords}
-
-% ---------- INTRODUCTION ----------
 \section{Introduction}
-Telecom operators face recurring revenue loss when customers discontinue their subscriptions. Predicting churn in advance enables targeted retention actions such as plan optimisation, personalised offers, and service interventions. The goal of this project is to design an end-to-end churn prediction system: (i) clean and encode the Telco dataset into a machine-readable format, (ii) train and evaluate baseline and ensemble machine learning models, and (iii) deploy a simple web interface for users to generate predictions from uploaded customer records.
 
-\section{Problem Statement}
-Given customer-level demographic and service usage information, predict whether a customer will churn (binary classification). The outcome supports early identification of high-risk customers.
+Customer churn is a major challenge for businesses, particularly in subscription-based industries such as telecommunications. Identifying customers who are likely to leave is essential for reducing revenue loss.
 
-% ---------- RELATED WORK ----------
-\section{Related Work}
-Churn prediction is typically modelled as a supervised classification task using customer profiles, billing patterns, and service usage attributes. Classical approaches include Logistic Regression (interpretable baseline) and tree-based ensembles such as Random Forests (strong performance on mixed-feature data). Prior work also explores imbalance handling (e.g., oversampling/SMOTE) and feature selection/importance for explainability. Add 2--4 citations relevant to churn prediction and Telco churn baselines in your final draft.
+Traditional machine learning approaches can predict churn risk using historical customer data. However, these models do not provide actionable recommendations to retain customers. This creates a gap between prediction and decision-making.
 
-% ---------- METHODOLOGY ----------
+To address this limitation, this project proposes an agentic AI-based system that combines machine learning predictions with retrieval-augmented reasoning. The system not only predicts churn risk but also generates structured retention strategies using domain knowledge.
+
+This approach transforms churn prediction from a passive analytical tool into an active decision-support system.
+
 \section{Methodology}
 
-\subsection{Dataset Description}
-We use the Telco Customer Churn dataset (Kaggle), which contains customer demographics (e.g., gender, senior citizen), subscription services (e.g., internet service, streaming), billing details (e.g., monthly charges, total charges), and a churn label. The label indicates whether a customer left the service.
+\subsection{Machine Learning Pipeline}
 
-\subsection{Preprocessing}
-Preprocessing aims to produce a consistent numeric feature matrix suitable for machine learning.
-Key steps include:
-\begin{itemize}
-    \item \textbf{Missing value handling:} blank \texttt{TotalCharges} values are coerced to numeric and missing entries are filled with 0.
-    \item \textbf{Column removal:} non-informative identifiers such as \texttt{customerID} are removed.
-    \item \textbf{Categorical encoding:} categorical values are converted to numeric using saved label encoders (\texttt{label\_encoders.pkl}).
-    \item \textbf{Feature alignment:} the UI aligns incoming CSV columns to the expected feature list stored in \texttt{feature\_names.json}.
+The dataset used is the Telco Customer Churn dataset. Data preprocessing includes handling categorical variables, encoding, and feature alignment.
+
+Three models were evaluated:
+\begin{itemize}[leftmargin=*]
+\item Random Forest
+\item Gradient Boosting
+\item Logistic Regression
 \end{itemize}
 
-\subsection{Models Used}
-We trained and compared two models:
+To address class imbalance, SMOTE was applied within the training pipeline. Model selection was performed using Stratified K-Fold Cross-Validation with ROC-AUC as the evaluation metric.
+
+The Gradient Boosting model achieved the best performance with a CV ROC-AUC of 0.8453 and a test ROC-AUC of 0.8419.
+
+\subsection{Agentic AI Workflow}
+
+The agentic system is implemented using LangGraph, which enables a structured and stateful execution pipeline.
+
+The workflow is defined using a custom state containing:
 \begin{itemize}
-    \item \textbf{Logistic Regression (LR):} a linear baseline model for binary classification.
-    \item \textbf{Random Forest (RF):} an ensemble of decision trees to capture non-linear feature interactions.
+\item Customer data
+\item Churn probability
+\item Key contributing factors
+\item Retrieved contextual strategies
+\item Final structured report
 \end{itemize}
 
-\subsection{Training and Validation}
-The training script (\texttt{train\_model.py}) trains the models on the cleaned dataset. A standard split is used (e.g., 80\% training, 20\% testing). Evaluation is done using Accuracy and the Confusion Matrix; optionally Precision, Recall, and F1-score can be included.
+The system is composed of the following nodes:
 
-If your training pipeline uses imbalance handling (e.g., SMOTE from \texttt{imblearn}), mention it explicitly here and add the settings used.
+\begin{itemize}
+\item \textbf{Analyze Factors}: Extracts top churn drivers using feature importance data
+\item \textbf{Retrieve Context}: Queries the vector database using semantic search
+\item \textbf{Generate Strategy}: Produces structured recommendations using an LLM
+\end{itemize}
 
-% ---------- RESULTS ----------
-\section{Results}
+A conditional edge is implemented to skip the agentic pipeline for low-risk customers, significantly reducing computational overhead and improving efficiency.
 
-\subsection{Quantitative Results}
-Table~\ref{tab:results} reports the performance comparison. Replace the placeholder numbers with the final values from \texttt{artifacts/model\_results.json}.
+This design demonstrates the integration of symbolic workflow control with generative AI capabilities.
 
-\begin{table}[ht]
-\centering
-\caption{Model Performance Comparison (replace with your final values)}
-\label{tab:results}
-\begin{tabular}{lcccc}
-\toprule
-Model & Acc & Prec & Rec & F1 \\
-\midrule
-Logistic Regression & 0.xx & 0.xx & 0.xx & 0.xx \\
-Random Forest & 0.xx & 0.xx & 0.xx & 0.xx \\
-\bottomrule
-\end{tabular}
-\end{table}
+\subsection{Retrieval-Augmented Generation}
 
-\subsection{Confusion Matrix}
-Include confusion matrices for each model (either as a figure or text summary). You may generate them from the training script and attach as an image in the report.
+A local knowledge base of customer retention strategies is used. The document is split into chunks of size 300 with overlap 50.
 
-\subsection{Feature Importance}
-Random Forest feature importance is exported to \texttt{artifacts/feature\_importance.csv}. For the final report, include the top 10 most important features and explain why they plausibly affect churn.
+Embeddings are generated using the all-MiniLM-L6-v2 model and stored in a Chroma vector database. The system retrieves the top 2 relevant chunks for each query.
 
-% ---------- DEPLOYMENT ----------
-\section{Deployment (Streamlit App)}
-We deployed a Streamlit application (\texttt{app.py}) to provide an interactive interface. Users upload a Telco-format CSV; the app performs light cleaning, applies saved encoders, aligns features, and produces churn predictions. The interface displays summary KPIs, simple charts, and provides a CSV download of predictions.
+This ensures that the LLM generates grounded and context-aware recommendations.
+\subsection{System Architecture and Workflow}
 
-% ---------- DISCUSSION ----------
-\section{Discussion}
-Random Forest typically performs better on this dataset due to non-linear interactions between service subscriptions, tenure, and billing attributes. Logistic Regression offers interpretability and can serve as a strong baseline. Limitations include sensitivity to how categorical variables are encoded and potential dataset imbalance, which can inflate accuracy while underperforming on minority churn cases. Future work could include calibration, threshold tuning, and more robust encodings (e.g., one-hot encoding) depending on deployment requirements.
+The proposed system follows a hybrid architecture combining machine learning and agentic AI components. The workflow is designed to transform raw customer data into actionable business insights.
 
-% ---------- CONCLUSION ----------
+The complete pipeline operates as follows:
+
+\begin{enumerate}
+\item User provides customer data via the Streamlit interface
+\item Data undergoes preprocessing including handling missing values and encoding
+\item The trained Gradient Boosting model predicts churn probability
+\item A threshold-based routing mechanism determines further execution
+\item For high-risk customers:
+\begin{itemize}
+\item Key churn factors are extracted using feature importance
+\item A semantic query is generated and passed to the RAG system
+\item Relevant retention strategies are retrieved from the knowledge base
+\item The LLM generates a structured retention report
+\end{itemize}
+\item Final results are displayed in a user-friendly dashboard
+\end{enumerate}
+
+This modular design ensures scalability, interpretability, and efficient resource usage.
+
+\section{Results and UI Demonstration}
+
+The system was tested using multiple real customer profiles from the Telco dataset. The machine learning model successfully predicts churn probability, which is further processed by the agentic system for decision-making.
+
+\subsection{Prediction Performance}
+
+The Gradient Boosting model achieved the best performance:
+\begin{itemize}[leftmargin=*]
+\item Cross-Validation ROC-AUC: 0.8453
+\item Test ROC-AUC: 0.8419
+\end{itemize}
+
+These results demonstrate strong predictive capability in identifying customers at risk of churn.
+
+\subsection{User Interface and Predictions}
+
+The Streamlit-based interface allows users to input or select customer data and visualize churn risk using an intuitive gauge chart.
+
+Example outputs:
+\begin{itemize}[leftmargin=*]
+\item Customer A:
+\begin{itemize}
+\item Predicted Label: Stay
+\item Risk Probability: 4.81\%
+\item Risk Category: Low Risk
+\end{itemize}
+
+\item Customer B:
+\begin{itemize}
+\item Predicted Label: Stay
+\item Risk Probability: 2.19\%
+\item Risk Category: Low Risk
+\end{itemize}
+
+\item Customer C:
+\begin{itemize}
+\item Predicted Label: Stay
+\item Risk Probability: 16.82\%
+\item Risk Category: Low Risk
+\end{itemize}
+\end{itemize}
+
+\subsection{System Behaviour}
+
+For customers below the churn threshold of 30\%, the system intelligently avoids triggering the agentic workflow. This optimization ensures efficient resource usage and reduces unnecessary API calls.
+
+For high-risk customers, the system activates the LangGraph pipeline to:
+\begin{itemize}[leftmargin=*]
+\item Identify key contributing factors
+\item Retrieve relevant retention strategies
+\item Generate structured, actionable recommendations
+\end{itemize}
+
+The system introduces a conditional execution mechanism, where expensive LLM-based reasoning is only triggered for high-risk customers, making the solution both scalable and cost-efficient.
+
+\subsection{Robustness Features}
+
+The system demonstrates strong robustness through:
+\begin{itemize}[leftmargin=*]
+\item Handling missing and noisy data via preprocessing and imputation
+\item Displaying preprocessing warnings to the user
+\item Maintaining consistent feature alignment with trained model inputs
+\end{itemize}
+
+This ensures reliable predictions even when input data is incomplete or imperfect.
+
 \section{Conclusion}
-This project delivers an end-to-end churn prediction pipeline: data cleaning, categorical encoding, model training/evaluation, artefact generation, and a deployable Streamlit UI. The system is reproducible through saved artefacts (\texttt{model.pkl}, \texttt{label\_encoders.pkl}, \texttt{feature\_names.json}) and can be demonstrated live using sample inputs or uploaded customer data.
 
-% ---------- REFERENCES ----------
-\bibliographystyle{IEEEtranN}
-\bibliography{references}
+This project demonstrates how traditional churn prediction can be enhanced using agentic AI techniques. By integrating machine learning, RAG, and LangGraph workflows, the system provides actionable insights rather than just predictions.
 
-% ---------- APPENDIX ----------
-\appendix
-
-\section{Repository Information}
-
-\subsection{Repository Link}
-Add your GitHub URL here:
-\begin{center}
-\textbf{\url{https://github.com/<username>/AI-ML-Project}}
-\end{center}
-
-\subsection{Repository Structure}
-The project repository follows the structure shown below:
-
-\begin{lstlisting}[language={},caption={Project Folder Structure}]
-AI-ML-Project/
-  artifacts/
-    feature_importance.csv
-    feature_names.json
-    label_encoders.pkl
-    model.pkl
-    model_results.json
-  data/
-    WA_Fn-UseC_-Telco-Customer-Churn.csv
-  app.py
-  clean_data.py
-  cleaned_data.csv
-  train_model.py
-  README.md
-  requirements.txt
-\end{lstlisting}
-
-\subsection{Key Components}
-\begin{itemize}
-    \item \textbf{clean\_data.py}: Loads raw data, handles missing values, drops irrelevant columns, and saves \texttt{cleaned\_data.csv}.
-    \item \textbf{train\_model.py}: Trains ML models, evaluates them, and stores artefacts in \texttt{artifacts/}.
-    \item \textbf{artifacts/model.pkl}: Trained classifier used for inference.
-    \item \textbf{artifacts/label\_encoders.pkl}: Saved encoders for consistent categorical conversion.
-    \item \textbf{artifacts/feature\_names.json}: Expected feature list to align uploaded CSVs.
-    \item \textbf{app.py}: Streamlit web app for CSV upload, prediction, charts, and download.
-\end{itemize}
+The proposed system enables organizations to proactively retain customers and improve decision-making processes. Future work can focus on expanding the knowledge base, integrating real-time data, and deploying the system in enterprise environments.
 
 \end{document}
