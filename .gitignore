@@ -1,8 +1,7 @@
 venv/
 __pycache__/
 *.pyc
-
 .env
 chroma_db/
-__pycache__/
-
+.streamlit/
+.DS_Store

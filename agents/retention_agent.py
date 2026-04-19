@@ -1,3 +1,5 @@
+"""LangGraph-based retention agent that combines churn risk, retrieved strategies, and LLM generation."""
+
 import json
 import os
 from pathlib import Path
@@ -13,7 +15,7 @@ from pydantic import BaseModel, Field
 from langgraph.graph import StateGraph, END
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import SystemMessage, HumanMessage
-from rag_setup import get_retriever
+from agents.rag_setup import get_retriever
 
 # 1. Threshold Standardization
 CHURN_THRESHOLD = 0.3

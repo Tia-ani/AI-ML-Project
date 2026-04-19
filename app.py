@@ -1,3 +1,5 @@
+"""Streamlit application for customer churn prediction and agentic retention recommendations."""
+
 import json
 from pathlib import Path
 
@@ -8,7 +10,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from agent import CHURN_THRESHOLD, get_retention_plan
+from agents.retention_agent import CHURN_THRESHOLD, get_retention_plan
 
 ARTIFACTS_DIR = Path("artifacts")
 DEMO_DATA_PATH = Path("data") / "WA_Fn-UseC_-Telco-Customer-Churn.csv"
