@@ -9,3 +9,6 @@ maxUploadSize = 200
 headless = true
 enableCORS = false
 port = 8501
+
+[runner]
+magicEnabled = false
